@@ -176,7 +176,8 @@ Timeline.prototype.drawYearColumns = function(o,m,t) {
   for (var i=0;i<o;i++) {
 
     var y = document.createElementNS(this.svgns,'line');
-
+    var g = t.querySelectorAll('g');
+    var g0 = g[0];
     if ( i == (o - 1) ) {
       y.setAttribute('x1',this.timelineWidth);
       y.setAttribute('x2',this.timelineWidth);
@@ -189,7 +190,7 @@ Timeline.prototype.drawYearColumns = function(o,m,t) {
     y.setAttribute('y2',this.getTimelineHeight(this.events));
     y.setAttribute('stroke-width','1');
     y.setAttribute('stroke','#505050');
-    t.appendChild(y);
+    g0.appendChild(y);
   }
 }
 
@@ -217,7 +218,7 @@ Timeline.prototype.createYearLabels = function(e) {
 
 Timeline.prototype.drawEvents = function(e) {
   var nHeigth = 20;
-  var g = this.svg.querySelectorAll('g')[2];
+  var g = this.svg.querySelectorAll('g')[1];
   for (var i=0; i<e.length;i++) {
     var y = document.createElementNS(this.svgns,'line');
     var node = e[i];
