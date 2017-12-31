@@ -68,6 +68,9 @@ function Timeline(id,data) {
   // Add SVG to page
   this.timeline.appendChild(this.svg);
 
+  // Create Descriptions
+  this.addDescriptions(this.events,this.timeline);
+
 }
 
 Timeline.prototype.createSVG = function(ns,s) {
@@ -179,8 +182,8 @@ Timeline.prototype.drawYearColumns = function(o,m,t) {
     var g = t.querySelectorAll('g');
     var g0 = g[0];
     if ( i == (o - 1) ) {
-      y.setAttribute('x1',this.timelineWidth);
-      y.setAttribute('x2',this.timelineWidth);
+      y.setAttribute('x1',this.timelineWidth - 1);
+      y.setAttribute('x2',this.timelineWidth - 1);
     } else {
       y.setAttribute('x1',i * ( m * 12 ));
       y.setAttribute('x2',i * ( m * 12 ));
@@ -246,4 +249,67 @@ Timeline.prototype.calculateMonths = function(s,e) {
 Timeline.prototype.setX = function(e,s,g){
   var r = (e - s) * g;
   return r;
+}
+
+
+Timeline.prototype.addDescriptions = function(data,parent) {
+  // create descriptions wrapper
+  this.createWrapperElement(parent);
+  // create descriptions
+  this.createDescriptions(data);
+}
+
+Timeline.prototype.createWrapperElement = function(parent) {
+  var container = document.createElement('div')
+  container.classList.add('timeline__descriptions');
+  container.id = "timelineDescriptions";
+  parent.appendChild(container);
+}
+
+Timeline.prototype.createDescriptions = function(data) {
+  var container = document.getElementById('timelineDescriptions');
+  var ul = document.createElement('ul')
+  var svgns = 'http://www.w3.org/2000/svg';
+
+  for (var i=0;i<data.length;i++) {
+    var startDate = returnDate(data[i][0]);
+    var endDate = returnDate(data[i][1]);
+    if (data[i][0] != '') {
+      var color = data[i][3];
+    } else {
+      var color = this.color[i];
+    }
+    var li = document.createElement('li');
+    var svg = document.createElementNS(svgns, 'svg');
+    var rect = document.createElementNS(svgns, 'rect');
+    var span = document.createElement('span');
+    rect.setAttributeNS(null, 'x', 0);
+    rect.setAttributeNS(null, 'y', 0);
+    rect.setAttributeNS(null, 'height', '10');
+    rect.setAttributeNS(null, 'width', '10');
+    rect.setAttributeNS(null,'fill',color);
+    svg.appendChild(rect);
+    svg.setAttribute('width','10');
+    svg.setAttribute('height','10');
+    li.appendChild(svg);
+    span.innerHTML =  startDate+' - '+endDate+' '+data[i][2];
+    li.appendChild(span);
+    ul.appendChild(li);
+  }
+  container.appendChild(ul);
+}
+
+function returnDate(date) {
+  var year = date.getFullYear();
+  var month = date.getMonth()+1;
+  var day = date.getDate();
+
+  if (day < 10) {
+    day = '0' + day;
+  }
+  if (month < 10) {
+    month = '0' + month;
+  }
+
+  return day + '.' + month + '.' + year;
 }
