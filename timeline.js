@@ -14,7 +14,7 @@
 function Timeline(id,data) {
   // Timeline Container (id)
   this.timeline = document.getElementById(id);
-  this.timelineContainer =   this.timeline.getBoundingClientRect();
+  this.timelineContainer = this.timeline.getBoundingClientRect();
   // Timeline Width, based on width of container
   this.timelineWidth = this.timelineContainer.width;
   // SVG Object  */
@@ -67,10 +67,15 @@ function Timeline(id,data) {
   this.createYearLabels(this.years);
   // Add SVG to page
   this.timeline.appendChild(this.svg);
-
+  // Add width / height + viewbox attributes
+  this.svgAddAttributes(this.svg);
   // Create Descriptions
   this.addDescriptions(this.events,this.timeline);
 
+}
+Timeline.prototype.svgAddAttributes(s) {
+  var bb = s.getBoundingClientRect();
+  s.setAttribute('viewBox','0 0'+bb.width+' '+bb.height);
 }
 
 Timeline.prototype.createSVG = function(ns,s) {
@@ -78,6 +83,7 @@ Timeline.prototype.createSVG = function(ns,s) {
     var g = document.createElementNS(ns,'g');
     s.appendChild(g);
   }
+
 }
 
 Timeline.prototype.getTimelineHeight = function(e) {
@@ -207,7 +213,7 @@ Timeline.prototype.createYearLabels = function(e) {
     if (j === 1) {
       xPos = ( this.timelineWidth / 2 )  - 16;
     } else if ( j === ( e.length - 1)) {
-      xPos = this.timelineWidth - 32;
+      xPos = this.timelineWidth - 33;
    }
 
     y.innerHTML = node;
